@@ -1,48 +1,44 @@
-# ESCENARIO 5
-# Gestión de Voltaje en Banco de Baterías de Nodo UNAD
-# Sensor INA219
+"""Control de voltaje del banco de baterías (sensor INA219)."""
 
-voltios = float(
-    input("Ingrese el voltaje inicial del banco de baterías: ")
-)
+VOLTAJE_CRITICO = 30.0
+VOLTAJE_MINIMO = 21.0
+VOLTAJE_FLOTACION = 27.5
+MAX_LECTURAS = 20
 
-chequeo_baterias = True
-lectura = 0
-max_lecturas = 20
 
-while chequeo_baterias and lectura < max_lecturas:
+def monitorear_banco_baterias(voltios):
+    """Simula las lecturas del banco y aplica la protección."""
+    chequeo_baterias = True
+    lectura = 0
 
-    lectura += 1
+    while chequeo_baterias and lectura < MAX_LECTURAS:
+        lectura += 1
+        print("\nLectura:", lectura)
+        print("Voltaje actual:", round(voltios, 2), "V")
 
-    print("\nLectura:", lectura)
-    print("Voltaje actual:", round(voltios, 2), "V")
+        if voltios > VOLTAJE_CRITICO:
+            print("PELIGRO: Sobretensión extrema. Fusible abierto.")
+            chequeo_baterias = False
+        elif voltios < VOLTAJE_MINIMO:
+            print("Protección: Desconexión de carga por descarga")
+            voltios += 1.0
+        elif voltios <= VOLTAJE_FLOTACION:
+            print("Protección: Sistema operativo en flotación")
+            voltios += 0.2
+        else:
+            print("Protección: Disipador térmico activado")
+            voltios -= 1.5
 
-    if voltios > 30:
-        print(
-            "PELIGRO: Sobretensión extrema. "
-            "Fusible abierto."
-        )
-        chequeo_baterias = False
+    print("\nFin del monitoreo del banco de baterías.")
 
-    elif voltios < 21:
-        print(
-            "Protección: Desconexión de carga "
-            "por descarga"
-        )
-        voltios += 1.0
 
-    elif voltios >= 21 and voltios <= 27.5:
-        print(
-            "Protección: Sistema operativo "
-            "en flotación"
-        )
-        voltios += 0.2
+def ejecutar_control_voltaje():
+    """Pide el voltaje inicial y lanza el monitoreo."""
+    voltios = float(
+        input("Ingrese el voltaje inicial del banco de baterías: ")
+    )
+    monitorear_banco_baterias(voltios)
 
-    else:
-        print(
-            "Protección: Disipador térmico "
-            "activado"
-        )
-        voltios -= 1.5
 
-print("\nFin del monitoreo del banco de baterías.")
+if __name__ == "__main__":
+    ejecutar_control_voltaje()
