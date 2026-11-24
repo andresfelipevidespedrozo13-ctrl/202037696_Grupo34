@@ -1,24 +1,26 @@
-# ESCENARIO 3: Monitoreo de Histéresis en Presión Hidráulica
+"""Registro de lecturas de presión hidráulica con alerta de límite."""
+
+LIMITE_PRESION_BAR = 5.0
 
 historico_presion_bar = [1.2, 3.4, 5.6, 2.1, 4.5] * 3000
 
+
 def verificar_cambios_histeresis(lectura_actual):
-    # Duplica el historial completo en cada medición
-    global historico_presion_bar
-
-    copia_memoria = historico_presion_bar.copy();
-    copia_memoria.append(lectura_actual)
-
-    if lectura_actual>5.0:print("Presion alta");historico_presion_bar=copia_memoria
-    else:print("Presion estable");historico_presion_bar=copia_memoria
-
-
-def verificar_cambios_histeresis_optimizada(lectura_actual):
     """Registra la lectura y verifica el límite permitido."""
-    global historico_presion_bar
     historico_presion_bar.append(lectura_actual)
 
-    if lectura_actual > 5.0:
+    if lectura_actual > LIMITE_PRESION_BAR:
         print("Presion alta")
     else:
         print("Presion estable")
+
+
+def ejecutar_registro_presion():
+    """Pide una lectura en bar y la agrega al historial."""
+    lectura_actual = float(input("Ingrese la lectura de presión (bar): "))
+    verificar_cambios_histeresis(lectura_actual)
+    print("Registros almacenados:", len(historico_presion_bar))
+
+
+if __name__ == "__main__":
+    ejecutar_registro_presion()
